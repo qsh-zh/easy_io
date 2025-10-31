@@ -596,6 +596,7 @@ class Boto3Backend(BaseStorageBackend):
                 will be raised.
 
         Examples:
+
             >>> backend = Boto3Backend()
             >>> filepath = 's3://path/of/file'
             >>> backend.remove(filepath)

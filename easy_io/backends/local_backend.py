@@ -406,6 +406,7 @@ class LocalBackend(BaseStorageBackend):
                 will be raised.
 
         Examples:
+
             >>> backend = LocalBackend()
             >>> filepath = '/path/of/file'
             >>> backend.remove(filepath)

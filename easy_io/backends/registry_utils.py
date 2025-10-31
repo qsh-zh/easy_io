@@ -6,8 +6,11 @@ from easy_io.backends.boto3_backend import Boto3Backend
 from easy_io.backends.http_backend import HTTPBackend
 from easy_io.backends.local_backend import LocalBackend
 
-backends: dict = {}
-prefix_to_backends: dict = {}
+backends: dict[str, type[BaseStorageBackend]] = {}
+"""Mapping from backend name to the registered backend class."""
+
+prefix_to_backends: dict[str, type[BaseStorageBackend]] = {}
+"""Mapping from URI prefixes to backend classes."""
 
 
 def _register_backend(

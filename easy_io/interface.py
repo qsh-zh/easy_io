@@ -721,6 +721,7 @@ def remove(
             will be raised.
 
     Examples:
+
         >>> filepath = '/path/of/file'
         >>> remove(filepath)
     """

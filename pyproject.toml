@@ -58,6 +58,9 @@ Repository = "https://github.com/qsh-zh/easy_io.git"
 Documentation = "https://github.com/qsh-zh/easy_io#readme"
 Issues = "https://github.com/qsh-zh/easy_io/issues"
 
+[project.scripts]
+eio_load = "easy_io.cli_scripts.inspect_file:simple"
+
 [dependency-groups]
 dev = [
     "pre-commit>=3.7",

@@ -44,6 +44,7 @@ file_handlers = {
     "jsonl": JsonlHandler(),
     "byte": ByteHandler(),
 }
+"""Default mapping from file suffix to :class:`BaseFileHandler` instances."""
 
 for torch_type in ["pt", "pth", "ckpt"]:
     file_handlers[torch_type] = TorchHandler()

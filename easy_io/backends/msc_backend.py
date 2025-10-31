@@ -584,6 +584,7 @@ class MSCBackend(BaseStorageBackend):
                 will be raised.
 
         Examples:
+
             >>> backend = MSCBackend()
             >>> filepath = "path/of/file"  # or "s3://path/of/file"
             >>> backend.remove(filepath)

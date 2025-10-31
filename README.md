@@ -2,8 +2,8 @@
 
 `easy_io` provides pluggable file backends (local, HTTP/S, S3) and format
 handlers for common data types (text, JSON, YAML, pickle, numpy arrays, etc.).
-The project draws inspiration from `mmengine <https://github.com/open-mmlab/mmengine>`_
-and the `jammy <https://gitlab.com/qsh.zh/jam/>`_ toolbox while re-packaging
+The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine)
+and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging
 the ideas into a focused, backend-oriented IO helper.
 
 ## Environment Setup

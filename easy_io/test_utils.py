@@ -55,16 +55,17 @@ def get_gpu_architecture():
 class RunIf:
     """RunIf wrapper for conditional skipping of tests.
 
-    Fully compatible with `@pytest.mark`.
+    Fully compatible with ``@pytest.mark``.
 
-    Example:
+    Example
+    -------
 
-    ```python
+    .. code-block:: python
+
         @RunIf(min_torch="1.8")
         @pytest.mark.parametrize("arg1", [1.0, 2.0])
         def test_wrapper(arg1):
             assert arg1 > 0
-    ```
     """
 
     def __new__(  # noqa: C901
