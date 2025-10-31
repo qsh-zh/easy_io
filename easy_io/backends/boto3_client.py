@@ -316,6 +316,54 @@ class Boto3Client:
                     raise  # Re-raise the exception after max retries
                 time.sleep(2)  # Wait for 2 seconds before retrying
 
+    def fast_get(self, filepath, num_processes: int = 32) -> bytes:
+        """
+        Downloads a file from S3 in multiple parts asynchronously and combines them.
+
+        Args:
+            filepath (str): The S3 path of the file to download.
+
+        Returns:
+            bytes: The downloaded file data.
+        """
+        assert aioboto3 is not None, "aioboto3 is required for fast_get"
+        original_filepath = filepath
+        filepath = self._check_path(filepath)
+        bucket = filepath.split("/")[0]
+        key = "/".join(filepath.split("/")[1:])
+        part_size = 16 * 1024 * 1024  # 16 MB part size
+
+        file_size = self._get_file_size(bucket=bucket, key=key)
+        if file_size <= part_size:
+            return self.get(original_filepath)
+        num_parts = ceil(file_size / part_size)
+
+        shm = shared_memory.SharedMemory(create=True, size=num_parts * part_size)
+        shm_name = shm.name
+
+        part_numbers = np.array_split(np.arange(num_parts), num_processes)
+
+        try:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=num_processes) as executor:
+                args = []
+                for i in range(num_processes):
+                    cur_parts = part_numbers[i].tolist()
+                    args.append((cur_parts, part_size, bucket, key, self._s3_cred_info, shm_name))
+                executor.map(download_parts_to_s3, args)
+
+            all_data = shm.buf[:file_size].tobytes()
+        except Exception as e:
+            log.critical(f"An error occurred: {e}", rank0_only=False)
+
+            import traceback
+
+            traceback.print_exc()
+            raise
+        finally:
+            shm.close()
+            shm.unlink()
+        return all_data
+
     def put(self, obj, filepath):
         filepath = self._check_path(filepath)
         bucket_name = filepath.split("/")[0]

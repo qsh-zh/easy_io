@@ -43,6 +43,7 @@ file_handlers = {
     "gz": GzipHandler(),
     "jsonl": JsonlHandler(),
     "byte": ByteHandler(),
+    "bin": ByteHandler(),
 }
 """Default mapping from file suffix to :class:`BaseFileHandler` instances."""
 

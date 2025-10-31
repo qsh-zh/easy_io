@@ -4,7 +4,6 @@ from typing import Any, Optional
 
 from easy_io import log
 
-CRED_ENVS = None
 CRED_ENVS_DICT = None
 
 DEPLOYMENT_ENVS = ["prod", "dev", "stg"]
@@ -23,7 +22,8 @@ def open_auth(s3_credential_path: Optional[Any], mode: str):
         raise ValueError(f"Could not parse into env var: {s3_credential_path}")
     cred_env_name = f"PROD_{name.upper()}"
 
-    if CRED_ENVS.APP_ENV in DEPLOYMENT_ENVS and cred_env_name in CRED_ENVS_DICT:
+    # if CRED_ENVS.APP_ENV in DEPLOYMENT_ENVS and cred_env_name in CRED_ENVS_DICT:
+    if False:
         object_storage_config = get_creds_from_env(cred_env_name)
         log.info(f"using ENV vars for {cred_env_name}")
 
@@ -46,7 +46,8 @@ def get_creds_from_env(cred_env_name: str) -> dict[str, str]:
 
 
 def json_load_auth(f):
-    if CRED_ENVS.APP_ENV in DEPLOYMENT_ENVS:
+    # if CRED_ENVS.APP_ENV in DEPLOYMENT_ENVS:
+    if False:
         return f if f else {}
     else:
         return json.load(f)

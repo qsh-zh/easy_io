@@ -48,7 +48,8 @@ dev = [
 all = [
     "pre-commit>=3.7",
     "pytest>=7.4",
-    "ruff>=0.5"
+    "ruff>=0.5",
+    "pynvml>=11.0.1",
 ]
 
 [project.urls]

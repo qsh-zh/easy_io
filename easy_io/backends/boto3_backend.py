@@ -100,6 +100,20 @@ class Boto3Backend(BaseStorageBackend):
         value = self._client.get(filepath)
         return value
 
+    def fast_get(self, filepath: Union[str, Path], num_processes: int = 32) -> bytes:
+        """Read bytes from a given ``filepath`` with multiple processes and async
+
+        Args:
+            filepath (str or Path): Path to read data.
+            num_processes (int): Number of processes to read data. Defaults to 8.
+        """
+        assert num_processes > 1
+        filepath = self._map_path(filepath)
+        filepath = self._format_path(filepath)
+        filepath = self._replace_prefix(filepath)
+        value = self._client.fast_get(filepath, num_processes=num_processes)
+        return value
+
     def get_text(
         self,
         filepath: Union[str, Path],
@@ -543,7 +557,7 @@ class Boto3Backend(BaseStorageBackend):
 
         try:
             with open(dst, "wb") as f:
-                data = self.get(src)
+                data = self.fast_get(src)
                 f.write(data)
         except Exception as e:
             log.error(f"Failed to write file: {e}")
