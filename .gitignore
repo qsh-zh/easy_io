@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# uv
+.venv/
+uv.lock
+
+# Documentation
+docs/_build/
+
+# IDE
+.idea/
+.vscode/

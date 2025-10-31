@@ -1,0 +1,137 @@
+# pyproject.toml for the easy_io package.
+#
+# This file captures the metadata, dependency graph, and tooling configuration
+# used both locally (via uv) and in CI when publishing releases.
+[project]
+name = "easy_io"
+version = "0.1.0"
+description = "Flexible IO helpers with pluggable backends and handlers"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [
+    { name = "Qsh", email = "qsh.zh27@gmail.com" }
+]
+keywords = ["io", "storage", "s3", "serialization"]
+dependencies = [
+    "aioboto3>=12.3",
+    "boto3>=1.28",
+    "loguru>=0.7",
+    "numpy>=1.24",
+    "pandas>=1.5",
+    "pyyaml>=6.0",
+    "torch>=2.0",
+    "imageio>=2.26",
+    "pillow>=10.0",
+    "trimesh>=4.0"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: System :: Filesystems",
+]
+
+[project.optional-dependencies]
+
+dev = [
+    "pre-commit>=3.7",
+    "pytest>=7.4",
+    "ruff>=0.5"
+]
+all = [
+    "pre-commit>=3.7",
+    "pytest>=7.4",
+    "ruff>=0.5"
+]
+
+[project.urls]
+Homepage = "https://github.com/qsh-zh/easy_io"
+Repository = "https://github.com/qsh-zh/easy_io.git"
+Documentation = "https://github.com/qsh-zh/easy_io#readme"
+Issues = "https://github.com/qsh-zh/easy_io/issues"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=3.7",
+    "pytest>=7.4",
+    "ruff>=0.5"
+]
+docs = [
+    "sphinx>=7.3",
+    "pydata-sphinx-theme>=0.15",
+    "myst-parser>=2.0",
+    "sphinx-autodoc-typehints>=2.0",
+    "sphinx-copybutton>=0.5"
+]
+release = [
+    "build>=1.2",
+    "twine>=5.1"
+]
+
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["easy_io"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.uv]
+package = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+fix = true
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "B",
+    "C4",
+    "C90",
+    "E",
+    "F",
+    "I",
+    "PGH",
+    "RUF",
+    "S",
+    "SIM",
+    "T10",
+    "TRY",
+    "UP",
+    "YTT"
+]
+ignore = [
+    "E501",
+    "E731",
+    "S101",
+    "TRY003",
+    "UP007",
+    "TRY300",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S603"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["easy_io"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::FutureWarning"
+]
+markers = [
+    "unit: fast unit tests",
+    "integration: tests that may access remote storage"
+]
