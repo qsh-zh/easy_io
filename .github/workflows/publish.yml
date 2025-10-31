@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     tags:
-      - "v*"
+      - "*"
 
 jobs:
   publish:
@@ -15,6 +15,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set project version from tag
+        run: |
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then
+            echo "This workflow must be triggered from a tag push."
+            exit 1
+          fi
+
+          VERSION="${GITHUB_REF_NAME}"
+          if ! printf '%s' "${VERSION}" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "Release tag '${GITHUB_REF_NAME}' is invalid. Use semantic versions like 1.2.3."
+            exit 1
+          fi
+
+          sed -i -E "s/^version = \".*\"/version = \"${VERSION}\"/" pyproject.toml
+          echo "Set project version to ${VERSION} from tag ${GITHUB_REF_NAME}."
+          echo "RELEASE_VERSION=${VERSION}" >> "${GITHUB_ENV}"
+          grep '^version' pyproject.toml
 
       - name: Install uv
         uses: astral-sh/setup-uv@v3

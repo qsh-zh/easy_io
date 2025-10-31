@@ -133,12 +133,14 @@ uv run twine check dist/*
 
 Publishing to PyPI is automated via GitHub Actions (`.github/workflows/publish.yml`).
 Create a PyPI trusted publisher or add the `PYPI_API_TOKEN` repository secret. Then
-tag a release:
+tag a release using a semantic version (no leading `v`):
 
 ```bash
-git tag v0.1.0
-git push origin v0.1.0
+git tag 0.1.0
+git push origin 0.1.0
 ```
+
+Tags must follow the `MAJOR.MINOR.PATCH` pattern (for example, `1.2.3`).
 
 The workflow will build and publish the project with `uv publish`.
 
