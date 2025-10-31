@@ -1,8 +1,30 @@
-# easy_io
+<h1 align="center">easy_io</h1>
+
+<p align="center">
+  <a href="https://pypi.org/project/py-ezio/">
+    <img src="https://img.shields.io/pypi/v/py-ezio?style=for-the-badge" alt="PyPI" />
+  </a>
+  <a href="https://pypi.org/project/py-ezio/">
+    <img src="https://img.shields.io/pypi/l/py-ezio?style=for-the-badge" alt="PyPI - License" />
+  </a>
+  <a href="https://github.com/qsh-zh/easy_io">
+    <img src="https://img.shields.io/badge/-github-grey?style=for-the-badge&logo=github" alt="GitHub code" />
+  </a>
+  <a href="https://qsh-zh.github.io/easy_io/">
+    <img src="https://img.shields.io/badge/docs-gh--pages-blue?style=for-the-badge" alt="Project Docs" />
+  </a>
+  <a href="https://pypi.org/project/py-ezio/">
+    <img src="https://img.shields.io/pypi/pyversions/py-ezio?style=for-the-badge" alt="PyPI - Python Version" />
+  </a>
+</p>
+
+<p align="center">
+  <i>Simple load/dump APIs with pluggable storage backends and rich format handlers.</i>
+</p>
 
 ## Introduction
 
-`easy_io` provides pluggable file backends (local, HTTP/S, S3) and format handlers for common data types (text, JSON, YAML, pickle, numpy arrays, etc.).
+`easy_io` provides simple read/write primitives (`easy_io.load` and `easy_io.dump`) backed by pluggable storage engines (local files, HTTP/S endpoints, S3 buckets, and more) and format handlers for common data modalities (text, JSON, YAML, pickle, numpy arrays, etc.).
 
 The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine) and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging the ideas into a focused, backend-oriented IO helper.
 
@@ -120,6 +142,8 @@ uv sync --group docs
 uv run sphinx-build -b html docs docs/_build/html
 python -m http.server --directory docs/_build/html 8000
 ```
+
+Published documentation is available at https://qsh-zh.github.io/easy_io/ once the `Docs` workflow has run (triggered automatically on pushes to `main` or manually via GitHub Actions).
 
 ### Release tooling
 
