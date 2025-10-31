@@ -5,7 +5,7 @@
 [project]
 name = "py-ezio"
 version = "0.0.1"
-description = "Flexible IO helpers with pluggable backends and handlers"
+description = "Simple IO APIs with pluggable storage backends and rich format handlers"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"

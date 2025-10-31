@@ -19,12 +19,19 @@
 </p>
 
 <p align="center">
-  <i>Simple load/dump APIs with pluggable storage backends and rich format handlers.</i>
+  <i>Simple IO APIs with pluggable storage backends and rich format handlers.</i>
 </p>
 
 ## Introduction
 
-`easy_io` provides simple read/write primitives (`easy_io.load` and `easy_io.dump`) backed by pluggable storage engines (local files, HTTP/S endpoints, S3 buckets, and more) and format handlers for common data modalities (text, JSON, YAML, pickle, numpy arrays, etc.).
+`easy_io` wraps a tiny set of intuitive helpers—`load`, `dump`, `get`, `put`, `copyfile`, and friends—so you can move data with minimal boilerplate. The same API works across local paths, HTTP/S endpoints, S3 buckets, and any other registered backend while automatically selecting the right format handler for text, JSON, YAML, pickle, NumPy arrays, and more. Whether you need a quick round-trip or a fully managed remote sync, you keep the same simple calls.
+
+### Core ideas
+
+- **Simple surface area** – a handful of functions to read, write, copy, list, and remove files or directories without juggling clients.
+- **Storage flexibility** – plug in or cache backends (`set_s3_backend`, `get_file_backend`) to reuse credentials and talk to multiple storage systems.
+- **Format awareness** – `easy_io.load`/`easy_io.dump` infer or accept formats and delegate to rich handlers so serialization just works.
+- **Productive extras** – mirror assets locally (`get_local_path`, `copyfile_to_local`), generate presigned URLs, and perform tree-level operations across backends.
 
 The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine) and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging the ideas into a focused, backend-oriented IO helper.
 
@@ -39,9 +46,23 @@ pip install py-ezio
 ### Quickstart
 
 ```python
+from pathlib import Path
+
 import easy_io
 
-print(easy_io.get_text("README.md"))
+# Write and read text without caring about the underlying storage.
+easy_io.put_text("hello backend", "tmp/examples/hello.txt")
+print(easy_io.get_text("tmp/examples/hello.txt"))
+
+# Materialize a remote (or local) file into a temporary path when needed.
+with easy_io.get_local_path("tmp/examples/hello.txt") as local_path:
+    print(Path(local_path).read_text())
+
+# Copy, inspect, and clean up just as you would with pathlib or shutil.
+easy_io.copyfile("tmp/examples/hello.txt", "tmp/examples/hello_copy.txt")
+print(list(easy_io.list_dir_or_file("tmp/examples/")))
+easy_io.remove("tmp/examples/hello.txt")
+easy_io.remove("tmp/examples/hello_copy.txt")
 ```
 
 ### Common Workflows
