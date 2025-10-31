@@ -3,8 +3,8 @@
 # This file captures the metadata, dependency graph, and tooling configuration
 # used both locally (via uv) and in CI when publishing releases.
 [project]
-name = "easy_io"
-version = "0.1.0"
+name = "py-ezio"
+version = "0.0.1"
 description = "Flexible IO helpers with pluggable backends and handlers"
 readme = "README.md"
 license = { text = "MIT" }
@@ -59,7 +59,7 @@ Documentation = "https://github.com/qsh-zh/easy_io#readme"
 Issues = "https://github.com/qsh-zh/easy_io/issues"
 
 [project.scripts]
-eio_load = "easy_io.cli_scripts.inspect_file:simple"
+ezio_load = "easy_io.cli_scripts.inspect_file:simple"
 
 [dependency-groups]
 dev = [

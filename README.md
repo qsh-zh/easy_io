@@ -1,12 +1,85 @@
 # easy_io
 
-`easy_io` provides pluggable file backends (local, HTTP/S, S3) and format
-handlers for common data types (text, JSON, YAML, pickle, numpy arrays, etc.).
-The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine)
-and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging
-the ideas into a focused, backend-oriented IO helper.
+## Introduction
 
-## Environment Setup
+`easy_io` provides pluggable file backends (local, HTTP/S, S3) and format handlers for common data types (text, JSON, YAML, pickle, numpy arrays, etc.).
+
+The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine) and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging the ideas into a focused, backend-oriented IO helper.
+
+## User Guide
+
+### Installation
+
+```bash
+pip install py-ezio
+```
+
+### Quickstart
+
+```python
+import easy_io
+
+print(easy_io.get_text("README.md"))
+```
+
+### Common Workflows
+
+#### Local file round-trip
+
+```python
+import easy_io
+
+dummy_dict = {"a": 1, "b": 2}
+
+easy_io.dump(dummy_dict, "dummy_dict.pkl")
+loaded = easy_io.load("dummy_dict.pkl")
+
+assert loaded == dummy_dict
+
+easy_io.remove("dummy_dict.pkl")
+```
+
+#### Configure the S3 backend
+
+```python
+import easy_io
+
+easy_io.set_s3_backend(
+    backend_args={
+        "backend": "s3",
+        "path_mapping": None,
+        "s3_credential_path": "credentials/abc.secret",
+    }
+)
+
+for ith, path in enumerate(easy_io.list_dir_or_file("s3://checkpoints/")):
+    if ith > 5:
+        break
+    print(path)
+
+easy_io.copyfile_from_local(
+    "pyproject.toml",
+    "s3://checkpoints/pyproject.toml",
+)
+easy_io.remove("s3://checkpoints/pyproject.toml")
+```
+
+### CLI helper: `ezio_load`
+
+Installations from PyPI expose an `ezio_load` entry point for quick inspection of
+one or more files. Each file is loaded with `easy_io.load` and registered in an
+interactive IPython session as `f1`, `f2`, etc.
+
+```bash
+ezio_load data/example.pkl
+```
+
+You can pass multiple paths (local or remote). When you exit the IPython shell,
+the command ends.
+
+## Developer Guide
+
+### Environment Setup
 
 ```bash
 # 1. Use Python 3.9+ and install uv if it is not already available
@@ -28,19 +101,11 @@ export EASY_IO_LOG_LEVEL=DEBUG
 export EASY_LOG_LOG_TAG="MyService"
 ```
 
-`easy_io.log` prefixes messages with `EASY_LOG_LOG_TAG` (defaults to
-`EASY_IO`) and defaults to rank-zero logging when `torch.distributed` is
-initialized. Set `easy_io.log.RANK0_ONLY = False` in code if you need messages
-from every worker.
+`easy_io.log` prefixes messages with `EASY_LOG_LOG_TAG` (defaults to `EASY_IO`) and
+defaults to rank-zero logging when `torch.distributed` is initialized. Set
+`easy_io.log.RANK0_ONLY = False` in code if you need messages from every worker.
 
-## Quickstart
-
-```bash
-uv sync
-uv run python -c "import easy_io; print(easy_io.get_text('README.md'))"
-```
-
-### Development
+### Tests and linting
 
 ```bash
 uv sync --dev
@@ -64,15 +129,7 @@ uv run python -m build
 uv run twine check dist/*
 ```
 
-### Manual publish (developers)
-
-```bash
-uv sync --group release
-export UV_PUBLISH_TOKEN="$(pass show pypi/token)"  # orexport from your secret manager
-uv publish --token "$UV_PUBLISH_TOKEN"
-```
-
-## Publishing
+### Publishing
 
 Publishing to PyPI is automated via GitHub Actions (`.github/workflows/publish.yml`).
 Create a PyPI trusted publisher or add the `PYPI_API_TOKEN` repository secret. Then
@@ -85,8 +142,23 @@ git push origin v0.1.0
 
 The workflow will build and publish the project with `uv publish`.
 
-## Project Structure
+For manual publishes:
+
+```bash
+uv sync --group release
+export UV_PUBLISH_TOKEN="$(pass show pypi/token)"  # or export from your secret manager
+uv publish --token "$UV_PUBLISH_TOKEN"
+```
+
+### Project Structure
 
 - `pyproject.toml` – project metadata and dependency management (driven by uv)
 - `easy_io/` – package source code
 - `docs/` – Sphinx sources for the documentation portal
+
+### Contributing
+
+Contributions are welcome! Please open an issue or pull request describing the
+change you would like to make. Run the full test and lint suite before submitting
+and follow the existing code style. If your change affects user workflows, update
+the documentation and add regression tests where practical.
