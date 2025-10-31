@@ -26,12 +26,15 @@
 
 `easy_io` wraps a tiny set of intuitive helpers—`load`, `dump`, `get`, `put`, `copyfile`, and friends—so you can move data with minimal boilerplate. The same API works across local paths, HTTP/S endpoints, S3 buckets, and any other registered backend while automatically selecting the right format handler for text, JSON, YAML, pickle, NumPy arrays, and more. Whether you need a quick round-trip or a fully managed remote sync, you keep the same simple calls.
 
-### Core ideas
+### Core features
 
 - **Simple surface area** – a handful of functions to read, write, copy, list, and remove files or directories without juggling clients.
 - **Storage flexibility** – plug in or cache backends (`set_s3_backend`, `get_file_backend`) to reuse credentials and talk to multiple storage systems.
 - **Format awareness** – `easy_io.load`/`easy_io.dump` infer or accept formats and delegate to rich handlers so serialization just works.
 - **Productive extras** – mirror assets locally (`get_local_path`, `copyfile_to_local`), generate presigned URLs, and perform tree-level operations across backends.
+- **Optimized S3 transfers** – a pure-Python `Boto3Client` combines asyncio, shared memory, and multiprocess-driven multipart uploads/downloads for roughly 2-10x faster large-file throughput in AWS tests.
+
+![boto3_vs_our](./assets/btm_speed.jpg)
 
 The project draws inspiration from [mmengine](https://github.com/open-mmlab/mmengine) and the [jammy](https://gitlab.com/qsh.zh/jam/) toolbox while re-packaging the ideas into a focused, backend-oriented IO helper.
 
@@ -105,6 +108,12 @@ easy_io.copyfile_from_local(
     "s3://checkpoints/pyproject.toml",
 )
 easy_io.remove("s3://checkpoints/pyproject.toml")
+
+# Upload large objects with the optimized client.
+backend = easy_io.get_file_backend("s3://checkpoints/pyproject-fast.pkl")
+easy_io.dump({"payload": 42}, "payload.pkl")
+backend.fast_put("payload.pkl", "s3://checkpoints/pyproject-fast.pkl")
+easy_io.remove("payload.pkl")
 ```
 
 ### CLI helper: `ezio_load`

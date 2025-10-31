@@ -15,7 +15,6 @@ authors = [
 keywords = ["io", "storage", "s3", "serialization"]
 dependencies = [
     "aioboto3>=12.3",
-    "boto3>=1.28",
     "loguru>=0.7",
     "numpy>=1.24",
     "pandas>=1.5",
@@ -24,7 +23,6 @@ dependencies = [
     "imageio>=2.26",
     "pillow>=10.0",
     "trimesh>=4.0",
-    "pynvml>=13.0.1",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -44,7 +42,8 @@ classifiers = [
 dev = [
     "pre-commit>=3.7",
     "pytest>=7.4",
-    "ruff>=0.5"
+    "ruff>=0.5",
+    "pynvml>=11.0.1",
 ]
 all = [
     "pre-commit>=3.7",
