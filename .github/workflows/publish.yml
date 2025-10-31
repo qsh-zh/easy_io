@@ -40,7 +40,7 @@ jobs:
           version: latest
 
       - name: Sync runtime + tooling dependencies
-        run: uv sync --group dev --group docs
+        run: uv sync --group dev --group docs --group release
 
       - name: Lint with Ruff
         run: uv run ruff check
@@ -57,6 +57,9 @@ jobs:
           name: docs-html
           path: docs/_build/html
           retention-days: 7
+
+      - name: Build distribution artifacts
+        run: uv build
 
       - name: Publish to PyPI
         env:
