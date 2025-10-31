@@ -23,7 +23,8 @@ dependencies = [
     "torch>=2.0",
     "imageio>=2.26",
     "pillow>=10.0",
-    "trimesh>=4.0"
+    "trimesh>=4.0",
+    "pynvml>=13.0.1",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
